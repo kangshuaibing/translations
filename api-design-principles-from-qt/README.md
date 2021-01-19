@@ -1,4 +1,10 @@
-转自[github](https://github.com/oldratlee/translations/blob/master/api-design-principles-from-qt/README.md)
+转自:[github](https://github.com/oldratlee/translations/blob/master/api-design-principles-from-qt/README.md)
+在原文基础上进行修改，修改开始日期2021-01-18
+
+|    日期     |     修改内容      |
+| ---------- | ----------------- |
+| 2021-01-20 | 新增QProperty翻译 |
+
 
 原文链接：[API Design Principles](http://qt-project.org/wiki/API-Design-Principles) - [`Qt` Wiki](http://wiki.qt.io/)  
 基于[Gary的影响力](http://blog.csdn.net/gaoyingju)上 _Gary Gao_ 的译文稿：[`C++`的`API`设计指导](http://blog.csdn.net/gaoyingju/article/details/8245108)  
@@ -30,47 +36,50 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [1. 好`API`的6个特质](#1-%E5%A5%BDapi%E7%9A%846%E4%B8%AA%E7%89%B9%E8%B4%A8)
-    - [1.1 极简](#11-%E6%9E%81%E7%AE%80)
-    - [1.2 完备](#12-%E5%AE%8C%E5%A4%87)
-    - [1.3 语义清晰简单](#13-%E8%AF%AD%E4%B9%89%E6%B8%85%E6%99%B0%E7%AE%80%E5%8D%95)
-    - [1.4 符合直觉](#14-%E7%AC%A6%E5%90%88%E7%9B%B4%E8%A7%89)
-    - [1.5 易于记忆](#15-%E6%98%93%E4%BA%8E%E8%AE%B0%E5%BF%86)
-    - [1.6 引导`API`使用者写出可读代码](#16-%E5%BC%95%E5%AF%BCapi%E4%BD%BF%E7%94%A8%E8%80%85%E5%86%99%E5%87%BA%E5%8F%AF%E8%AF%BB%E4%BB%A3%E7%A0%81)
-- [2. 静态多态](#2-%E9%9D%99%E6%80%81%E5%A4%9A%E6%80%81)
-    - [2.1 好的案例](#21-%E5%A5%BD%E7%9A%84%E6%A1%88%E4%BE%8B)
-    - [2.2 差的案例](#22-%E5%B7%AE%E7%9A%84%E6%A1%88%E4%BE%8B)
-    - [2.3 值得斟酌的案例](#23-%E5%80%BC%E5%BE%97%E6%96%9F%E9%85%8C%E7%9A%84%E6%A1%88%E4%BE%8B)
-- [3. 基于属性的`API`](#3-%E5%9F%BA%E4%BA%8E%E5%B1%9E%E6%80%A7%E7%9A%84api)
-- [4. `C++`相关](#4-c%E7%9B%B8%E5%85%B3)
-    - [4.1 值 vs. 对象](#41-%E5%80%BC-vs-%E5%AF%B9%E8%B1%A1)
-        - [4.1.1 指针 vs. 引用](#411-%E6%8C%87%E9%92%88-vs-%E5%BC%95%E7%94%A8)
-        - [4.1.2 按常量引用传参 vs. 按值传参](#412-%E6%8C%89%E5%B8%B8%E9%87%8F%E5%BC%95%E7%94%A8%E4%BC%A0%E5%8F%82-vs-%E6%8C%89%E5%80%BC%E4%BC%A0%E5%8F%82)
-    - [4.2 虚函数](#42-%E8%99%9A%E5%87%BD%E6%95%B0)
-        - [4.2.1 避免虚函数](#421-%E9%81%BF%E5%85%8D%E8%99%9A%E5%87%BD%E6%95%B0)
-        - [4.2.2 虚函数 vs. 拷贝](#422-%E8%99%9A%E5%87%BD%E6%95%B0-vs-%E6%8B%B7%E8%B4%9D)
-    - [4.3 关于`const`](#43-%E5%85%B3%E4%BA%8Econst)
-        - [4.3.1 输入参数：`const`指针](#431-%E8%BE%93%E5%85%A5%E5%8F%82%E6%95%B0const%E6%8C%87%E9%92%88)
-        - [4.3.2 返回值：`const`值](#432-%E8%BF%94%E5%9B%9E%E5%80%BCconst%E5%80%BC)
-        - [4.3.3 返回值：非`const`的指针还是有`const`的指针](#433-%E8%BF%94%E5%9B%9E%E5%80%BC%E9%9D%9Econst%E7%9A%84%E6%8C%87%E9%92%88%E8%BF%98%E6%98%AF%E6%9C%89const%E7%9A%84%E6%8C%87%E9%92%88)
-        - [4.3.4 返回值：按值返回 还是 按`const`引用返回？](#434-%E8%BF%94%E5%9B%9E%E5%80%BC%E6%8C%89%E5%80%BC%E8%BF%94%E5%9B%9E-%E8%BF%98%E6%98%AF-%E6%8C%89const%E5%BC%95%E7%94%A8%E8%BF%94%E5%9B%9E)
-        - [4.4.5 `const` vs. 对象的状态](#445-const-vs-%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%8A%B6%E6%80%81)
-- [5. `API`的语义和文档](#5-api%E7%9A%84%E8%AF%AD%E4%B9%89%E5%92%8C%E6%96%87%E6%A1%A3)
-- [6. 命名的艺术](#6-%E5%91%BD%E5%90%8D%E7%9A%84%E8%89%BA%E6%9C%AF)
-    - [6.1 通用的命名规则](#61-%E9%80%9A%E7%94%A8%E7%9A%84%E5%91%BD%E5%90%8D%E8%A7%84%E5%88%99)
-    - [6.2 类的命名](#62-%E7%B1%BB%E7%9A%84%E5%91%BD%E5%90%8D)
-    - [6.3 枚举类型及其值的命名](#63-%E6%9E%9A%E4%B8%BE%E7%B1%BB%E5%9E%8B%E5%8F%8A%E5%85%B6%E5%80%BC%E7%9A%84%E5%91%BD%E5%90%8D)
-    - [6.4 函数和参数的命名](#64-%E5%87%BD%E6%95%B0%E5%92%8C%E5%8F%82%E6%95%B0%E7%9A%84%E5%91%BD%E5%90%8D)
-    - [6.5 布尔类型的`getter`与`setter`方法的命名](#65-%E5%B8%83%E5%B0%94%E7%B1%BB%E5%9E%8B%E7%9A%84getter%E4%B8%8Esetter%E6%96%B9%E6%B3%95%E7%9A%84%E5%91%BD%E5%90%8D)
-- [7. 避免常见陷阱](#7-%E9%81%BF%E5%85%8D%E5%B8%B8%E8%A7%81%E9%99%B7%E9%98%B1)
-    - [7.1 简化的陷阱](#71-%E7%AE%80%E5%8C%96%E7%9A%84%E9%99%B7%E9%98%B1)
-    - [7.2 布尔参数的陷阱](#72-%E5%B8%83%E5%B0%94%E5%8F%82%E6%95%B0%E7%9A%84%E9%99%B7%E9%98%B1)
-- [8. 案例研究](#8-%E6%A1%88%E4%BE%8B%E7%A0%94%E7%A9%B6)
-    - [8.1 `QProgressBar`](#81-qprogressbar)
-    - [8.2 `QAbstractPrintDialog` & `QAbstractPageSizeDialog`](#82-qabstractprintdialog--qabstractpagesizedialog)
-    - [8.3 `QAbstractItemModel`](#83-qabstractitemmodel)
-    - [8.4 `QLayoutIterator` & `QGLayoutIterator`](#84-qlayoutiterator--qglayoutiterator)
-    - [8.5 `QImageSink`](#85-qimagesink)
+- [1. 好`API`的6个特质](#1-好api的6个特质)
+    - [1.1 极简](#11-极简)
+    - [1.2 完备](#12-完备)
+    - [1.3 语义清晰简单](#13-语义清晰简单)
+    - [1.4 符合直觉](#14-符合直觉)
+    - [1.5 易于记忆](#15-易于记忆)
+    - [1.6 引导`API`使用者写出可读代码](#16-引导api使用者写出可读代码)
+- [2. 静态多态](#2-静态多态)
+    - [2.1 好的案例](#21-好的案例)
+    - [2.2 差的案例](#22-差的案例)
+    - [2.3 值得斟酌的案例](#23-值得斟酌的案例)
+- [3. 基于属性的`API`](#3-基于属性的api)
+- [4. 属性](#4-属性)
+    - [4.1 通知属性](#41-通知属性)
+    - [4.2 特殊例子](#42-特殊例子)
+- [5. `C++`相关](#5-c++相关)
+    - [5.1 值 vs. 对象](#51-值-vs-对象)
+        - [5.1.1 指针 vs. 引用](#511-指针-vs-引用)
+        - [5.1.2 按常量引用传参 vs. 按值传参](#512-按常量引用传参-vs-按值传参)
+    - [5.2 虚函数](#52-虚函数)
+        - [5.2.1 避免虚函数](#521-避免虚函数)
+        - [5.2.2 虚函数 vs. 拷贝](#522-虚函数-vs-拷贝)
+    - [5.3 关于`const`](#53-关于const)
+        - [5.3.1 输入参数：`const`指针](#531-输入参数const指针)
+        - [5.3.2 返回值：`const`值](#532-返回值const值)
+        - [5.3.3 返回值：非`const`的指针还是有`const`的指针](#533-返回值非const的指针还是有const的指针)
+        - [5.3.4 返回值：按值返回 还是 按`const`引用返回？](#534-返回值按值返回-还是-按const引用返回)
+        - [5.4.5 `const` vs. 对象的状态](#545-const-vs-对象的状态)
+- [6. `API`的语义和文档](#6-api的语义和文档)
+- [7. 命名的艺术](#7-命名的艺术)
+    - [7.1 通用的命名规则](#71-通用的命名规则)
+    - [7.2 类的命名](#72-类的命名)
+    - [7.3 枚举类型及其值的命名](#73-枚举类型及其值的命名)
+    - [7.4 函数和参数的命名](#74-函数和参数的命名)
+    - [7.5 布尔类型的`getter`与`setter`方法的命名](#75-布尔类型的getter与setter方法的命名)
+- [8. 避免常见陷阱](#8-避免常见陷阱)
+    - [8.1 简化的陷阱](#81-简化的陷阱)
+    - [8.2 布尔参数的陷阱](#82-布尔参数的陷阱)
+- [9. 案例研究](#9-案例研究)
+    - [9.1 `QProgressBar`](#91-qprogressbar)
+    - [9.2 `QAbstractPrintDialog` & `QAbstractPageSizeDialog`](#92-qabstractprintdialog--qabstractpagesizedialog)
+    - [9.3 `QAbstractItemModel`](#93-qabstractitemmodel)
+    - [9.4 `QLayoutIterator` & `QGLayoutIterator`](#94-qlayoutiterator--qglayoutiterator)
+    - [9.5 `QImageSink`](#95-qimagesink)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -187,11 +196,88 @@ toolButton->iconSize();    // returns (52, 52)
 
 在某些情况下，`getter`方法返回的结果与所设置的值不同。例如，虽然调用了`widget->setEnabled(true)`，但如果它的父`widget`处于`disabled`状态，那么`widget->isEnabled()`仍然返回的是`false`。这样是OK的，因为一般来说就是我们想要的检查结果（父`widget`处于`disabled`状态，里面的子`widget`也应该变为灰的不响应用户操作，就好像子`widget`自身处于`disabled`状态一样；与此同时，因为子`widget`记得在自己的内心深处是`enabled`状态的，只是一直等待着它的父`widget`变为`enabled`）。当然诸如这些都必须在文档中妥善地说明清楚。
 
-# 4. `C++`相关
+# 4. 属性
+在所有新代码中，应使用QProperty而不是getter / setter / signal属性。如果QProperty可以存在于公共对象中，则可以使用Q_PROPERTY（<type> <name>）在元对象系统中注册它。例如：
+```cpp
+class Foo : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(int myInt)
+public:
+    QProperty<int> myInt;
+};
+```
 
-## 4.1 值 vs. 对象
+您无需指定任何getters, setters, or signals。公共成员具有operator =（），并强制转换为其基础类型。代替更改信号，应使用绑定。在不可避免的“急切”更改通知的情况下，应使用QProperty :: subscribe（）。
 
-### 4.1.1 指针 vs. 引用
+如果属性成员必须存在于私有对象中，则可以使用Q_PRIVATE_QPROPERTY进行注册。Q_PRIVATE_QPROPERTY声明一个结构，该方法具有转发到实际属性的方法。例如：
+
+```cpp
+class Foo : public QObject
+{
+    Q_OBJECT
+    Q_DECLARE_PRIVATE(Foo)
+    Q_PRIVATE_QPROPERTY(Foo::d_func(), int, myInt, setMyInt)
+public:
+
+    Q_PRIVATE_QPROPERTIES_BEGIN
+    Q_PRIVATE_QPROPERTY_IMPL(myInt)
+    // possibly more properties
+    Q_PRIVATE_QPROPERTIES_END
+};
+```
+其他...
+```cpp
+class FooPrivate
+{
+public:
+    QProperty<int> myInt;
+};
+```
+每个具有Q_OBJECT的公共类都必须具有Q_PRIVATE_QPROPERTIES_BEGIN / Q_PRIVATE_QPROPERTIES_END，无论它是否具有任何属性，以防将来有人要添加属性。
+## 4.1 通知属性
+如果出于向后兼容的原因需要保留更改信号，则可以使用QNotifiedProperty而不是QProperty。请注意，这会导致结合评估不够理想，应尽可能避免。特别是，QProperty确实具有您可以使用的subscription（）方法。但是，subscribe（）也不如绑定。
+
+QNotifiedProperty接受可用于发送信号的回调。通常，此类属性的实现将在私有对象中。回调必须是属性所在类的成员函数。例如：
+
+```cpp
+class Foo : public QObject
+{
+    Q_OBJECT
+    Q_DECLARE_PRIVATE(Foo)
+    Q_PRIVATE_QPROPERTY(Foo::d_func(), int, myInt, setMyInt, NOTIFY myIntChanged)
+public:
+
+    Q_PRIVATE_QPROPERTIES_BEGIN
+    Q_PRIVATE_QPROPERTY_IMPL(myInt)
+    // possibly more properties
+    Q_PRIVATE_QPROPERTIES_END
+
+Q_SIGNALS:
+    void myIntChanged();
+};
+```
+其他
+```cpp
+class FooPrivate
+{
+    Q_DECLARE_PUBLIC(Foo)
+public:
+    void myIntChanged() { Q_EMIT q_func()->myIntChanged(); }
+    QNotifiedProperty<int, &FooPrivate::myIntChanged> myInt;
+};
+```
+
+## 4.2 特殊例子
+您可以使用Q_PRIVATE_READONLY_PROPERTY在公共对象中为私有对象中的Q（Notified）Property创建只读访问器。
+
+在某些情况下，您需要为QProperty成员和元对象系统中注册的属性选择不同的名称。这可以通过Q_PROPERTY和Q_PRIVATE_QPROPERTY的NAME属性来实现。如果getter / setter / signal属性包含无法映射到QProperty或QNotifiedProperty的setter或getter，则通常会发生这种情况。例如，设置器可以是虚拟的。在这种情况下，您可以为QProperty选择一个不同的名称，并将原始的setter和getter保留在原位。
+
+# 5. `C++`相关
+
+## 5.1 值 vs. 对象
+
+### 5.1.1 指针 vs. 引用
 
 指针（`pointer`）还是引用（`reference`）哪个是最好的输出参数（`out-parameters`）？
 
@@ -221,7 +307,7 @@ Hsv getHsv() const;
 > 另外，如果这样的参数过多的话，最好使用一个结构体来把数据打包，一方面，为一组返回值取个名字，另一方面，这样有利用接口的简单。
 
 
-### 4.1.2 按常量引用传参 vs. 按值传参
+### 5.1.2 按常量引用传参 vs. 按值传参
 
 如果类型大于16字节，按常量引用传参。
 
@@ -245,7 +331,7 @@ void setAlarm(const QSharedPointer<Alarm> &alarm);
 
 >【译注】：这是传引用和传值的差别了，因为传值会有对像拷贝，传引用则不会。所以，如果对像的构造比较重的话（换句话说，就是对像里的成员变量需要的内存比较大），这就会影响很多性能。所以，为了提高性能，最好是传引用。但是如果传入引用的话，会导致这个对象可能会被改变，所以传入`const reference`。
 
-## 4.2 虚函数
+## 5.2 虚函数
 
 在`C++`中，当类的成员函数声明为`virtual`，主要是为了通过在子类重载此函数能够定制函数的行为。将函数声明为`virtual`的目的是为了让对这个函数已有的调用变成执行实际实例的代码路径。对于没有在类外部调用的函数声明成`virtual`，你应该事先非常慎重地思考过。
 
@@ -268,7 +354,7 @@ virtual void setOverwriteMode( bool b ) { overWrite = b; }
 
 > 【译注】：『多态』的目的只不过是为了实践 —— 『依赖于接口而不是实现』，也就是说，接口是代码抽像的一个非常重要的方式（在`Java/Go`中都有专门的接口声明语法）。所以，如果没有接口抽像，使用『多态』的意义也就不大了，因为也就没有必要使用『虚函数』了。
 
-### 4.2.1 避免虚函数
+### 5.2.1 避免虚函数
 
 在`Qt`中，我们有很多理由尽量减少虚函数的数量。每一次对虚函数的调用会在函数调用链路中插入一个未掌控的节点（某种程度上使结果更无法预测），使得`bug`修复变得更复杂。用户在重写的虚函数中可以做很多疯狂的事：
 
@@ -294,7 +380,7 @@ virtual void setOverwriteMode( bool b ) { overWrite = b; }
 > 1. 使用虚函数时，你需要对编译器的内部行为非常清楚，否则，你会在使用虚函数时，觉得有好些『古怪』的问题发生。比如在创建数组对象的时候。
 > 2. 在`C++`中，会有一个基础类，这个基础类中已经实现好了很多功能，然后把其中的一些函数放给子类去修改和实现。这种方法在父类和子类都是一组开发人员维护时没有什么问题，但是如果这是两组开发人员，这就会带来很多问题了，就像`Qt`这样，子类完全无法控制，全世界的开发人员想干什么就干什么。所以，子类的代码和父类的代码在兼容上就会出现很多很多问题。所以，还是上面所说，其实，虚函数应该声明在接口的语义里（这就是设计模式的两个宗旨——依赖于接口，而不是实现；钟爱于组合，而不是继承。也是为什么`Java`和`Go`语言使用`interface`关键字的原因，`C++`在多态的语义上非常容易滥用）
 
-### 4.2.2 虚函数 vs. 拷贝
+### 5.2.2 虚函数 vs. 拷贝
 
 多态对象（`polymorphic objects`）和值类型的类（`value-type classes`）两者很难协作好。
 
@@ -329,7 +415,7 @@ public:
 
 >【译注】：因为原文上说，这部份并没有完成，所以，我也没有搞懂原文具体也是想表达什么。不过，就标题而言，原文是想说，在多态的情况下拷贝对象所带来的问题？？
 
-## 4.3 关于`const`
+## 5.3 关于`const`
 
 **_`C++`的关键词`const`表明了内容不会改变或是没有副作用。可以应用于简单的值、指针及指针所指的内容，也可以作为一个特别的属性应用于类的成员函数上，表示成员函数不能修改对象的状态。_**
 
@@ -337,7 +423,7 @@ public:
 
 让我们看一下在`Qt`的`API`设计中与`const`相关的场景。
 
-### 4.3.1 输入参数：`const`指针
+### 5.3.1 输入参数：`const`指针
 
 有输入指针参数的`const`成员函数，几乎总是`const`指针参数。
 
@@ -368,7 +454,7 @@ bool isVisibleTo(const QGraphicsItem *parent) const;
 QPointF mapFromItem (const QGraphicsItem *item, const QPointF &point) const;
 ```
 
-### 4.3.2 返回值：`const`值
+### 5.3.2 返回值：`const`值
 
 调用函数返回的非引用类型的结果，称之为右值（`R-value`）。
 
@@ -419,7 +505,7 @@ int main() {
 
 > 【译注】：上述的代码说明，如果返回值不是`const`的，代码可以顺利编译通过，然而并没有什么卵用，因为那个临时对像马上就被抛弃了。所以，这样的无用的代码最好还是在编译时报个错，以免当时头脑发热想错了，写了一段没用但还以为有用的代码。
 
-### 4.3.3 返回值：非`const`的指针还是有`const`的指针
+### 5.3.3 返回值：非`const`的指针还是有`const`的指针
 
 谈到`const`函数应该返回非`const`的指针还是`const`指针这个话题时，多数人发现在`C++`中关于『`const`正确性』（`const correctness`）在概念上产生了分歧。 _问题起源是：**`const`函数本身不能修改对象自身的状态，却可以返回成员的非`const`指针**。返回指针这个简单动作本身既不会影响整个对象的可见状态，当然也不会改变这个函数职责范围内涉及的状态。但是，这却使得程序员可以间接访问并修改对象的状态。_
 
@@ -450,7 +536,7 @@ foreach (const QGraphicsItem *item, scene.items()) {
 在`Qt`中，我们几乎只有非`const`的使用模式。我们选择的是实用路子：
 相比滥用非`const`指针返回类型带来的问题，返回`const`指针更可能招致过分使用`const_cast`的问题。
 
-### 4.3.4 返回值：按值返回 还是 按`const`引用返回？
+### 5.3.4 返回值：按值返回 还是 按`const`引用返回？
 
 若返回的是对象的拷贝，那么返回`const`引用是更直接的方案；
 然而，这样的做法限制了后面想要对这个类的重构（`refactor`）。
@@ -459,7 +545,7 @@ foreach (const QGraphicsItem *item, scene.items()) {
 
 > 【译注】：参看《Effective C++》中条款23：Don't try to return a reference when you must return an object
 
-### 4.4.5 `const` vs. 对象的状态
+### 5.4.5 `const` vs. 对象的状态
 
 `const`正确性（`const correctness`）的问题就像`C`圈子中`vi`与`emacs`的讨论，因为这个话题在很多地方都存在分歧（比如基于指针的函数）。
 
@@ -488,7 +574,7 @@ void QGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem opti
 
 `const`关键字并不能按你期望的样子起作用。应该考虑将其移除而不是去重载`const`/非`const`函数。
 
-# 5. `API`的语义和文档
+# 6. `API`的语义和文档
 
 当传值为`-1`的参数给函数，函数会是什么行为？有很多类似的问题……
 
@@ -502,11 +588,11 @@ void QGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem opti
 - 让别人使用`API`（看了文档或是先不看文档都可以）
 - 给类写文档（包含类的概述和每个函数）
 
-# 6. 命名的艺术
+# 7. 命名的艺术
 
 命名很可能是`API`设计中最重要的一个问题。类应该叫什么名字？成员函数应该叫什么名字？
 
-## 6.1 通用的命名规则
+## 7.1 通用的命名规则
 
 有几个规则对于所有类型的命名都等同适用。第一个，之前已经提到过，不要使用缩写。即使是明显的缩写，比如把`previous`缩写成`prev`，从长远来看是回报是负的，因为用户必须要记住缩写词的含义。
 
@@ -525,11 +611,11 @@ void QGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem opti
 
 > 【译注】：写文档是一个非常好的习惯。写文档的过程其实就是在帮你梳理你的编程思路。很多时候，文档写着写着你就会发现要去改代码去了。除了上述的好处多，写文档还有更多的好处。比如，在写文档的过程中，你发现文字描述过于复杂了，这表明着你的代码或逻辑是复杂的，这就倒逼你去重构你的代码。所以 —— **写文档其实就是写代码**。
 
-## 6.2 类的命名
+## 7.2 类的命名
 
 识别出类所在的分组，而不是为每个类都去找个完美的命名。例如，所有`Qt 4`的能感知模型（`model-aware`）的`item view`，类后缀都是`View`（`QListView`、`QTableView`、`QTreeView`），而相应的基于`item`（`item-based`）的类后缀是`Widget`（`QListWidget`、`QTableWidget`、`QTreeWidget`）。
 
-## 6.3 枚举类型及其值的命名
+## 7.3 枚举类型及其值的命名
 
 声明枚举类型时，需要记住在`C++`中枚举值在使用时不会带上类型（与`Java`、`C#`不同）。下面的例子演示了枚举值命名得过于通用的危害：
 
@@ -573,13 +659,13 @@ enum AlignmentFlag { AlignLeft, AlignTop, ... };
 typedef QFlags<AlignmentFlag> Alignment;
 ```
 
-## 6.4 函数和参数的命名
+## 7.4 函数和参数的命名
 
 函数命名的第一准则是可以从函数名看出来此函数是否有副作用。在`Qt 3`中，`const`函数`QString::simplifyWhiteSpace()`违反了此准则，因为它返回了一个`QString`而不是按名称暗示的那样，改变调用它的`QString`对象。在`Qt 4`中，此函数重命名为`QString::simplified()`。
 
 虽然参数名不会出现在使用`API`的代码中，但是它们给程序员提供了重要信息。因为现代的`IDE`都会在写代码时显示参数名称，所以值得在头文件中给参数起一个恰当的名字并在文档中使用相同的名字。
 
-## 6.5 布尔类型的`getter`与`setter`方法的命名
+## 7.5 布尔类型的`getter`与`setter`方法的命名
 
 为`bool`属性的`getter`和`setter`方法命名总是很痛苦。`getter`应该叫做`checked()`还是`isChecked()`？`scrollBarsEnabled()`还是`areScrollBarEnabled()`？
 
@@ -605,9 +691,9 @@ typedef QFlags<AlignmentFlag> Alignment;
 
 `setter`的名字由`getter`衍生，去掉了前缀后在前面加上了`set`；例如，`setDown()`与`setScrollBarsEnabled()`。
 
-# 7. 避免常见陷阱
+# 8. 避免常见陷阱
 
-## 7.1 简化的陷阱
+## 8.1 简化的陷阱
 
 一个常见的误解是：实现需要写的代码越少，`API`就设计得越好。应该记住：代码只会写上几次，却要被反复阅读并理解。例如：
 
@@ -627,7 +713,7 @@ slider->setObjectName("volume");
 
 >【译注】：在有`IDE`的自动提示的支持下，后者写起来非常方便，而前者还需要看相应的文档。
 
-## 7.2 布尔参数的陷阱
+## 8.2 布尔参数的陷阱
 
 布尔类型的参数总是带来无法阅读的代码。给现有的函数增加一个`bool`型的参数几乎永远是一种错误的行为。仍以`Qt`为例，`repaint()`有一个`bool`类型的可选参数用于指定背景是否被擦除。可以写出这样的代码：
 
@@ -669,9 +755,9 @@ str.replace("%USER%", user, Qt::CaseInsensitive); // Qt 4
 
 > 【译注】：关于这个条目可以看看`CoolShell`这篇文章一些展开的讨论： [千万不要把 BOOL 设计成函数参数]( https://coolshell.cn/articles/5444.html)。
 
-# 8. 案例研究
+# 9. 案例研究
 
-## 8.1 `QProgressBar`
+## 9.1 `QProgressBar`
 
 为了展示上文各种准则的实际应用。我们来研究一下`Qt 3`中`QProgressBar`的`API`，并与`Qt 4`中对应的`API`作比较。在`Qt 3`中：
 
@@ -757,20 +843,20 @@ signals:
 };
 ```
 
-## 8.2 `QAbstractPrintDialog` & `QAbstractPageSizeDialog`
+## 9.2 `QAbstractPrintDialog` & `QAbstractPageSizeDialog`
 
 `Qt 4.0`有2个幽灵类`QAbstractPrintDialog`和`QAbstractPageSizeDialog`，作为
 `QPrintDialog`和`QPageSizeDialog`类的父类。这2个类完全没有用，因为`Qt`的`API`没有是`QAbstractPrint-`或是`-PageSizeDialog`指针作为参数并执行操作。通过篡改`qdoc`（`Qt文档`），我们虽然把这2个类隐藏起来了，却成了无用抽象类的典型案例。
 
 这不是说，**_好_** 的抽象是错的，`QPrintDialog`应该是需要有个工厂或是其它改变的机制 —— 证据就是它声明中的`#ifdef QTOPIA_PRINTDIALOG`。
 
-## 8.3 `QAbstractItemModel`
+## 9.3 `QAbstractItemModel`
 
 关于模型/视图（`model`/`view`）问题的细节在相应的文档中已经说明得很好了，但作为一个重要的总结这里还需要强调一下：抽象类不应该仅是所有可能子类的并集（`union`）。这样『合并所有』的父类几乎不可能是一个好的方案。`QAbstractItemModel`就犯了这个错误 —— 它实际上就是个`QTreeOfTablesModel`，结果导致了错综复杂（`complicated`）的`API`，而这样的`API`要让 **_所有本来设计还不错的子类_** 去继承。
 
 仅仅增加抽象是不会自动就把`API`变得更好的。
 
-## 8.4 `QLayoutIterator` & `QGLayoutIterator`
+## 9.4 `QLayoutIterator` & `QGLayoutIterator`
 
 在`Qt 3`，创建自定义的布局类需要同时继承`QLayout`和`QGLayoutIterator`（命名中的`G`是指`Generic`（通用））。`QGLayoutIterator`子类的实例指针会包装成`QLayoutIterator`，这样用户可以像和其它的迭代器（`iterator`）类一样的方式来使用。通过`QLayoutIterator`可以写出下面这样的代码：
 
@@ -788,7 +874,7 @@ while ((child = it.current()) != 0) {
 
 在`Qt 4`，我们干掉了`QGLayoutIterator`类（以及用于盒子布局和格子布局的内部子类），转而是让`QLayout`的子类重写`itemAt()`、`takeAt()`和`count()`。
 
-## 8.5 `QImageSink`
+## 9.5 `QImageSink`
 
 `Qt 3`有一整套类用来把完成增量加载的图片传递给一个动画 —— `QImageSource`/`Sink`/`QASyncIO`/`QASyncImageIO`。由于这些类之前只是用于启用动画的`QLabel`，完全过度设计了（`overkill`）。
 
